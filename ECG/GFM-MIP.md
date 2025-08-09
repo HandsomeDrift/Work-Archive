@@ -1,0 +1,43 @@
+# GFM-MIP
+
+## Introduction
+
+Myocardial infarction (MI), a severe manifestation of cardiovascular disease (CVD), remains a major cause of morbidity and mortality worldwide. Prompt and accurate diagnosis of MI is critical to improving patient survival rates, reducing complications, and guiding personalized treatment. Electrocardiography (ECG), particularly the 12-lead ECG, serves as a frontline diagnostic tool due to its low cost, noninvasiveness, and ease of acquisition in emergency settings. However, interpreting ECG data is inherently challenging, as it involves complex morphological patterns, variable signal dynamics, and lead-specific dependencies that are not always obvious to automated systems or even experienced clinicians [1], [2].
+
+Conventional approaches for automated MI diagnosis typically rely on a single data modality, such as ECG time-series [3] or derived ECG images [4], and employ either convolutional or recurrent neural networks for feature extraction. While these methods have shown promise, they face fundamental limitations. First, unimodal inputs fail to reflect the full physiological context necessary for robust decision-making, especially in complex clinical cases. Second, existing models often treat ECG leads as independent or flat sequences, disregarding their anatomical organization and inter-lead correlations. Moreover, most methods overlook laboratory biomarkers, such as cardiac enzymes or inflammatory markers, which carry vital biochemical information that complements ECG-based patterns [5].
+
+These limitations highlight the need for a more comprehensive and structured approach to MI diagnosis. In practice, cardiologists often consider multiple sources of evidence—including ECG morphology, temporal signal patterns, and laboratory test results—when making diagnostic decisions. Designing a computational model that mimics this multimodal reasoning process requires tackling several challenges: how to jointly model structured dependencies in temporal signals, how to incorporate patient-specific physiological information, and how to integrate heterogeneous modalities in a unified and coherent learning framework [6], [7].
+
+To address these challenges, we propose **GFM-MIP (Graph-informed and FiLM-enhanced Multimodal Fusion for Myocardial Infarction Prediction)**, a novel deep learning framework that integrates three complementary modalities: ECG time-series, ECG images, and laboratory test results. Specifically, GFM-MIP employs a Graphormer-based encoder to capture the relational structure among ECG leads, and a Vision Transformer to extract morphological features from ECG images. Patient-specific physiological context is injected into both branches via Feature-wise Linear Modulation (FiLM), enabling dynamic modulation of feature extraction. A Transformer-based fusion module aggregates the cross-modal representations, while a symmetric contrastive learning objective aligns time-series and image modalities in the shared latent space. The entire framework is jointly optimized using a hybrid loss that balances supervised classification and contrastive alignment.
+
+In summary, the main contributions of this work are as follows:
+
+- We propose a unified multimodal framework for MI prediction that integrates ECG signals, ECG images, and laboratory biomarkers.
+- We introduce a Graphormer-based temporal encoder to model the spatial and temporal dependencies among ECG leads.
+- We leverage FiLM-based modulation to inject patient-specific physiological information into both temporal and spatial branches.
+- We design a contrastive learning objective to align heterogeneous modalities and improve multimodal consistency.
+- We conduct extensive experiments on real-world clinical datasets and public benchmarks, demonstrating that our method achieves state-of-the-art performance across multiple evaluation metrics.
+
+## Related work
+
+### A. ECG-Based Deep Learning Methods
+
+Automated ECG interpretation has been a long-standing research focus in computational cardiology. Early studies primarily relied on handcrafted features and traditional classifiers. With the rise of deep learning, CNN-based and RNN-based architectures became dominant due to their ability to capture local patterns and sequential dynamics from raw ECG signals. Liu et al. [10] proposed a CNN model for detecting acute myocardial infarction (MI), showing improved diagnostic performance over conventional rule-based systems. Jafarian et al. [11] explored both shallow and deep neural networks to localize infarct regions based on signal morphology, while Lee et al. [12] utilized deep learning to detect low ejection fraction from ECG signals.
+
+More recently, transformer-based models have been introduced for ECG analysis due to their superiority in modeling long-range dependencies. Nie et al. [9] demonstrated that temporal self-attention can enhance ECG forecasting performance in long sequences. However, most existing methods are unimodal, focusing exclusively on time-series signals or 2D ECG images. Such approaches overlook the complementary value of biochemical indicators and lack the ability to capture diverse physiological cues, limiting their diagnostic robustness in clinical settings.
+
+### B. Graph Neural Networks and Transformers in Biomedical Applications
+
+Graph-based learning has become increasingly prominent in medical AI due to its strength in modeling structured and relational data. In ECG applications, the 12-lead signal system can be naturally represented as a graph, where each node corresponds to a lead, and edges reflect anatomical or physiological connectivity. Backhaus et al. [16] employed graph models to analyze myocardial strain, emphasizing the importance of spatial dependencies. Similarly, Alkhodair et al. (2022) leveraged GNNs to detect cardiac abnormalities by modeling spatial relations between ECG leads, significantly improving classification interpretability.
+
+In parallel, Vision Transformers (ViTs) have shown competitive results in medical image analysis, outperforming CNNs in capturing global morphological patterns. Kilimci et al. [5] demonstrated the effectiveness of ViTs in ECG image classification. ViT variants have also been successfully applied in other domains such as pathology and ophthalmology, highlighting their broad applicability in medical vision tasks.
+
+Moreover, hybrid architectures that combine graph neural networks and transformer modules have been explored in multi-organ segmentation [Yao et al., 2023], cancer subtype classification [Chen et al., 2022], and neuroimaging analysis [Fang et al., 2021]. These works support the premise that combining relational inductive biases from GNNs with global attention from transformers can yield more expressive biomedical representations. Yet, to our knowledge, few studies have jointly applied GNNs and transformers to the modeling of ECG data across both temporal and morphological dimensions within a unified diagnostic framework.
+
+### C. Multimodal Fusion and Contrastive Learning in Clinical Modeling
+
+Multimodal fusion has emerged as a powerful approach to enhance diagnostic accuracy by leveraging diverse patient information. Several works combine ECG with clinical metadata or laboratory values to improve prediction. Al-Zaiti et al. [22], [23] demonstrated that integrating ECG signals with structured clinical features significantly improves the identification of occlusion MI. Toprak et al. [4] used machine learning on high-sensitivity cardiac troponin (hs-cTn) to achieve more accurate triage decisions. Sun et al. [14] and Kalmady et al. [13] further highlighted the population-scale utility of ECG models augmented with lab data for mortality prediction and multi-condition screening.
+
+Contrastive learning has also gained traction in biomedical representation learning, especially for improving modality alignment and generalization. Wei et al. [19] proposed a bimodal masked autoencoder for ECG that incorporates contrastive losses to encourage consistent representations across domains. More recent frameworks like TimeMAE [25] and TimesURL [26] introduced sophisticated augmentation and pretext strategies for time-series contrastive learning, though they are often limited to single-modality or intra-signal tasks.
+
+Despite these advancements, the combination of structured fusion, patient-conditioned modulation, and cross-modal contrastive alignment remains underexplored in clinical modeling. This motivates the development of unified frameworks—such as our proposed GFM-MIP—that jointly address heterogeneity, personalization, and semantic coherence across ECG time-series, images, and lab features.
