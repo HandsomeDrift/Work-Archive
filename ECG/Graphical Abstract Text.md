@@ -1,0 +1,1 @@
+GFM-MIP fuses 12-lead ECG time-series, ECG images, and laboratory biomarkers via Graphormer, ViT, FiLM modulation, and contrastive fusion to personalize MI prediction. Across a clinical cohort and three public datasets, it achieves state-of-the-art ACC, highlighting robust, multimodal, and clinically relevant diagnosis.
